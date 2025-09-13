@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Shreya 🎉</title>
+  <style>
+    :root{--bg1:#ff9a9e;--bg2:#fecfef;--card:#ffffffcc}
+    html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(135deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center}
+    .container{width:960px;max-width:95%;background:rgba(255,255,255,0.06);border-radius:18px;padding:26px;box-shadow:0 10px 30px rgba(0,0,0,0.12);backdrop-filter:blur(6px);position:relative;overflow:hidden}
+    header{display:flex;gap:18px;align-items:center}
+    .avatar{width:90px;height:90px;border-radius:50%;overflow:hidden;flex:0 0 90px;border:4px solid rgba(255,255,255,0.25)}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    h1{margin:0;font-size:28px;color:#fff;text-shadow:0 3px 14px rgba(0,0,0,0.25)}
+    p.lead{color:#fff8;margin:6px 0 0}
+    .cta{margin-top:18px}
+    button.primary{background:linear-gradient(90deg,#ff6a88,#ffb199);border:0;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.15)}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.18);padding:10px 14px;border-radius:10px;color:#fff;margin-left:10px}
+    .surprise{margin-top:22px;background:var(--card);padding:18px;border-radius:12px;color:#111;display:none}
+    .message{font-size:18px;line-height:1.4}
+    #slideshow{height:260px;border-radius:12px;margin-top:18px;overflow:hidden;position:relative}
+    #slideshow img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
+    #slideshow img.active{opacity:1}
+    #confettiCanvas{position:absolute;inset:0;pointer-events:none}
+    footer{margin-top:16px;color:#fff8;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+    @media (max-width:520px){h1{font-size:20px}.avatar{width:72px;height:72px}}
+  </style>
+</head>
+<body>
+  <div class="container" id="page">
+    <canvas id="confettiCanvas"></canvas>
+
+    <header>
+      <div class="avatar">
+        <img id="avatarImg" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800&auto=format&fit=crop" alt="Shreya">
+      </div>
+      <div>
+        <h1>Happy Birthday, <span id="name">Shreya</span> 🎉</h1>
+        <p class="lead">Aaj ka din sirf tera hai — full of surprise, music & love.</p>
+        <div class="cta">
+          <button class="primary" id="openBtn">Tap to open surprise ✨</button>
+          <button class="ghost" id="voiceBtn">Play voice message 🎤</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="slideshow">
+      <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=1600&auto=format&fit=crop" class="active" alt="memory1">
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1600&auto=format&fit=crop" alt="memory2">
+      <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=1600&auto=format&fit=crop" alt="memory3">
+    </div>
+
+    <div class="surprise" id="surpriseCard">
+      <div class="message">
+        <h2 style="margin-top:0">To the beautiful Shreya,</h2>
+        <p>Tu meri life ki sabse pyaari cheez hai. Har din tere saath ek naya treasure lagta hai. Happy Birthday! 💖</p>
+        <p style="margin-top:8px;font-weight:700">— Tera (name) ✨</p>
+      </div>
+
+      <!-- Kalank Title Track Embedded -->
+      <div style="margin-top:14px">
+        <div style="position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;background:#000">
+          <iframe id="ytPlayer" src="https://www.youtube.com/embed/dHTtYJt3P5w?rel=0&enablejsapi=1&autoplay=0" style="position:absolute;inset:0;border:0;width:100%;height:100%" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <audio id="voiceMsg" src="#" preload="none"></audio>
+
+    <footer>
+      <div>Made with ❤️ for Shreya</div>
+      <div id="countdown"> </div>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      const slides = document.querySelectorAll('#slideshow img');
+      let i=0;
+      setInterval(()=>{
+        slides[i].classList.remove('active');
+        i=(i+1)%slides.length;
+        slides[i].classList.add('active');
+      },3500);
+    })();
+
+    (function(){
+      const el = document.getElementById('countdown');
+      function update(){
+        const now = new Date();
+        el.textContent = now.toLocaleString();
+      }
+      update();
+      setInterval(update,1000);
+    })();
+
+    function launchConfetti(){
+      const c = document.getElementById('confettiCanvas');
+      const ctx = c.getContext('2d');
+      function resize(){c.width = c.clientWidth; c.height = c.clientHeight}
+      resize(); window.addEventListener('resize',resize);
+      const pieces = [];
+      for(let i=0;i<120;i++){
+        pieces.push({x:Math.random()*c.width,y:Math.random()*-c.height,width:6+Math.random()*8,height:8+Math.random()*8,color:`hsl(${Math.random()*360},90%,60%)`,vx:(Math.random()-0.5)*2,vy:2+Math.random()*4,rot:Math.random()*360,vr:Math.random()*10});
+      }
+      let t=0;
+      function frame(){
+        ctx.clearRect(0,0,c.width,c.height);
+        for(const p of pieces){
+          p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+          ctx.fillStyle = p.color; ctx.fillRect(-p.width/2,-p.height/2,p.width,p.height);
+          ctx.restore();
+          if(p.y>c.height+40){p.y = -20; p.x = Math.random()*c.width}
+        }
+        t++; if(t<600) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    document.getElementById('openBtn').addEventListener('click',()=>{
+      document.getElementById('surpriseCard').style.display='block';
+      const ifr = document.getElementById('ytPlayer');
+      const src = ifr.getAttribute('src');
+      if(!src.includes('autoplay=1')){
+        ifr.src = src.replace('autoplay=0','autoplay=1');
+      }
+      launchConfetti();
+    });
+
+    document.getElementById('voiceBtn').addEventListener('click',async()=>{
+      const v = document.getElementById('voiceMsg');
+      if(!v.src || v.src === '#'){
+        alert('Voice message not set. Replace the audio#src in the HTML with your voice file URL to enable this button.');
+        return;
+      }
+      try{ await v.play(); }catch(e){ console.warn(e); }
+    });
+
+    document.getElementById('openBtn').addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') e.target.click(); });
+  </script>
+</body>
+</html>
