@@ -22,16 +22,14 @@
     #slideshow{height:260px;border-radius:12px;margin-top:18px;overflow:hidden;position:relative}
     #slideshow img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
     #slideshow img.active{opacity:1}
-    #confettiCanvas{position:absolute;inset:0;pointer-events:none;z-index:10}
-    #cakeSection{display:none;flex-direction:column;align-items:center;margin-top:38px;}
-    #svgCake{width:180px;display:block;margin-bottom:14px;}
-    #cutCakeBtn{background:linear-gradient(90deg,#ff6a88,#ffb199);color:#fff;border:none;font-size:1.1em;padding:12px 32px;border-radius:20px;cursor:pointer;font-weight:600;box-shadow:0 4px 18px #ffb3c6;}
-    #cutCakeBtn:active{background:#ff6a88;}
-    .cakeMsg{margin-top:18px;font-size:1.3em;color:#ff61a6;font-weight:700;}
-    .fadeIn{animation:fadeIn 1.2s;}
-    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    #confettiCanvas{position:absolute;inset:0;pointer-events:none}
     footer{margin-top:16px;color:#fff8;font-size:13px;display:flex;justify-content:space-between;align-items:center}
-    @media (max-width:520px){h1{font-size:20px}.avatar{width:72px;height:72px}#svgCake{width:128px;}}
+    /* Cake Popup */
+    #cakePopup{text-align:center;margin-top:20px;display:none}
+    #cakePopup img{width:250px;max-width:80%;border-radius:20px;box-shadow:0 6px 18px rgba(0,0,0,0.2)}
+    #cutCakeBtn{margin-top:16px;padding:12px 18px;border:none;border-radius:10px;background:#ff6a88;color:#fff;font-size:18px;cursor:pointer}
+    #cakeMsg{margin-top:12px;color:#fff;font-size:20px}
+    @media (max-width:520px){h1{font-size:20px}.avatar{width:72px;height:72px}}
   </style>
 </head>
 <body>
@@ -64,70 +62,32 @@
         <p>Tu meri life ki sabse pyaari cheez hai. Har din tere saath ek naya treasure lagta hai. Happy Birthday! 💖</p>
         <p style="margin-top:8px;font-weight:700">— Tera (name) ✨</p>
       </div>
-
-      <!-- Kalank Title Track Embedded -->
       <div style="margin-top:14px">
         <div style="position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;background:#000">
           <iframe id="ytPlayer" src="https://www.youtube.com/embed/dHTtYJt3P5w?rel=0&enablejsapi=1&autoplay=0" style="position:absolute;inset:0;border:0;width:100%;height:100%" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
-
     </div>
 
-    <!-- Birthday Cake & Cut Button Section (hidden initially) -->
-    <section id="cakeSection">
-      <!-- Cute SVG Cake -->
-      <div id="svgCake" class="fadeIn">
-        <svg viewBox="0 0 120 110">
-          <ellipse cx="60" cy="104" rx="38" ry="8" fill="#f7bfbf"/>
-          <rect x="22" y="54" width="76" height="50" rx="16" fill="#fff0e7" stroke="#ff9a9e" stroke-width="2"/>
-          <rect x="30" y="62" width="60" height="42" rx="12" fill="#ffb6b9"/>
-          <ellipse cx="60" cy="62" rx="30" ry="10" fill="#ffe3e3"/>
-          <ellipse cx="60" cy="62" rx="22" ry="7" fill="#fff"/>
-          <rect x="54" y="32" width="12" height="22" rx="6" fill="#ffe3e3"/>
-          <ellipse cx="60" cy="32" rx="6" ry="6" fill="#fff8b0"/>
-          <rect x="57" y="12" width="6" height="20" rx="3" fill="#ffd700"/>
-          <ellipse cx="60" cy="12" rx="3" ry="3" fill="#fffcd0"/>
-        </svg>
-      </div>
-      <button id="cutCakeBtn" class="fadeIn">Cut the Cake 🎂</button>
-      <div class="cakeMsg" id="cakeMsg"></div>
-      <audio id="bdayMusic" src="happy-birthday.mp3"></audio>
-    </section>
+    <!-- 🎂 Birthday Cake Popup -->
+    <div id="cakePopup">
+      <img src="cake.png" alt="Cake">
+      <br>
+      <button id="cutCakeBtn">Cut Cake 🎂</button>
+      <p id="cakeMsg"></p>
+    </div>
 
-    <audio id="voiceMsg" src="happy-birthday.mp3" preload="none"></audio>
+    <audio id="voiceMsg" src="#" preload="none"></audio>
+    <audio id="birthdaySong" src="happy-birthday.mp3" preload="auto"></audio>
 
     <footer>
       <div>Made with ❤️ for Shreya</div>
-      <div id="countdown"></div>
+      <div id="countdown"> </div>
     </footer>
   </div>
 
   <script>
-    // Birthday Date (set your actual birthday date and time here)
-    const bdayDate = new Date("2025-09-14T00:00:00");
-
-    // Countdown Timer logic
-    (function(){
-      const el = document.getElementById('countdown');
-      function update(){
-        const now = new Date();
-        let diff = bdayDate - now;
-        if(diff > 0){
-          let hours = Math.floor(diff/(1000*60*60));
-          let mins = Math.floor((diff%(1000*60*60))/(1000*60));
-          let secs = Math.floor((diff%(1000*60))/1000);
-          el.textContent = `Birthday in ${hours}h ${mins}m ${secs}s`;
-        } else {
-          el.textContent = "It's Shreya's Birthday! 🎉";
-          showCakeSection();
-        }
-      }
-      update();
-      setInterval(update,1000);
-    })();
-
-    // Slideshow logic
+    /* Slideshow */
     (function(){
       const slides = document.querySelectorAll('#slideshow img');
       let i=0;
@@ -138,7 +98,35 @@
       },3500);
     })();
 
-    // Confetti animation logic
+    /* Midnight Countdown with Cake Trigger */
+    (function(){
+      const el = document.getElementById('countdown');
+      const cakePopup = document.getElementById('cakePopup');
+      const song = document.getElementById('birthdaySong');
+
+      function update(){
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(24,0,0,0);
+        const diff = midnight - now;
+
+        if(diff <= 0){
+          el.textContent = "🎉 It's Time!";
+          cakePopup.style.display = 'block';
+          try { song.play(); } catch(e){ console.log('Autoplay blocked'); }
+          clearInterval(timer);
+        } else {
+          const hrs = Math.floor(diff / (1000*60*60));
+          const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+          const secs = Math.floor((diff % (1000*60)) / 1000);
+          el.textContent = `${hrs}h ${mins}m ${secs}s`;
+        }
+      }
+      const timer = setInterval(update,1000);
+      update();
+    })();
+
+    /* Confetti Function (existing) */
     function launchConfetti(){
       const c = document.getElementById('confettiCanvas');
       const ctx = c.getContext('2d');
@@ -163,24 +151,7 @@
       requestAnimationFrame(frame);
     }
 
-    // Show cake section and play music at birthday time
-    function showCakeSection(){
-      const cakeSec = document.getElementById('cakeSection');
-      if (cakeSec.style.display !== 'flex') {
-        cakeSec.style.display = "flex";
-        cakeSec.classList.add('fadeIn');
-        document.getElementById('bdayMusic').play().catch(()=>{});
-      }
-    }
-
-    // Cut cake logic
-    document.getElementById('cutCakeBtn').addEventListener('click',()=>{
-      document.getElementById('cakeMsg').textContent = "Happy Birthday Shreya! 🎂🎉";
-      launchConfetti();
-      document.getElementById('cutCakeBtn').disabled = true;
-    });
-
-    // Surprise Card logic
+    /* Surprise Card */
     document.getElementById('openBtn').addEventListener('click',()=>{
       document.getElementById('surpriseCard').style.display='block';
       const ifr = document.getElementById('ytPlayer');
@@ -191,17 +162,21 @@
       launchConfetti();
     });
 
-    // Voice message logic (your audio file)
+    /* Voice Message */
     document.getElementById('voiceBtn').addEventListener('click',async()=>{
       const v = document.getElementById('voiceMsg');
       if(!v.src || v.src === '#'){
-        alert('Voice message not set. Replace the audio#src in the HTML with your voice file URL to enable this button.');
+        alert('Voice message not set. Replace the audio#src with your file URL.');
         return;
       }
       try{ await v.play(); }catch(e){ console.warn(e); }
     });
 
-    document.getElementById('openBtn').addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') e.target.click(); });
+    /* Cake Button Action */
+    document.getElementById('cutCakeBtn').addEventListener('click',()=>{
+      document.getElementById('cakeMsg').textContent = "🎉 Cake Cut! Happy Birthday Shreya 🎉";
+      launchConfetti();
+    });
   </script>
 </body>
 </html>
